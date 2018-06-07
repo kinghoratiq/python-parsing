@@ -19,5 +19,5 @@ question.append(cleanQBody)
 
 dirtyAnswers = soup.find_all('div', attrs={'class':'answer'})
 for words in dirtyAnswers:
-	answers.append(words.find("p").text)
+	answers.append(words.text.strip())
 print(answers)
