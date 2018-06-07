@@ -9,12 +9,15 @@ answers = []
 qa_array = []
 
 dirtyQTitle = soup.find('a', attrs={'class':'question-hyperlink'})
-cleanQTitle = dirtyQuestion.text.strip()
+cleanQTitle = dirtyQTitle.text.strip()
 question.append(cleanQTitle)
 #print(cleanQuestion)
 dirtyQBody = soup.find("div", "post-text")
-cleanQBody = dirtyQdesc.text.strip()
+cleanQBody = dirtyQBody.text.strip()
 question.append(cleanQBody)
 #print(cleanQdesc)
 
-dirtyAnswers = soup.find_all()
+dirtyAnswers = soup.find_all('div', attrs={'class':'answer'})
+for words in dirtyAnswers:
+	answers.append(words.find("p").text)
+print(answers)
