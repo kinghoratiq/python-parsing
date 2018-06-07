@@ -6,18 +6,25 @@ webpage = urllib.request.urlopen('https://stackoverflow.com/questions/3477741/wh
 soup = BeautifulSoup(webpage, 'html.parser')
 question = []
 answers = []
-qa_array = []
+users = []
 
 dirtyQTitle = soup.find('a', attrs={'class':'question-hyperlink'})
 cleanQTitle = dirtyQTitle.text.strip()
 question.append(cleanQTitle)
 #print(cleanQuestion)
-dirtyQBody = soup.find("div", "post-text")
+
+dirtyQBody = soup.find('div', 'post-text')
 cleanQBody = dirtyQBody.text.strip()
 question.append(cleanQBody)
 #print(cleanQdesc)
 
+dirtyUsers = soup.find_all('div', attrs={'class':'user-details'})
+for j in dirtyUsers:
+	users.append(j.text.strip())
+#print(users)
+
+
 dirtyAnswers = soup.find_all('div', attrs={'class':'answer'})
 for words in dirtyAnswers:
 	answers.append(words.text.strip())
-print(answers)
+#print(answers)
