@@ -19,10 +19,21 @@ for words in soup.find_all('div', attrs={'class':'postcell'}):
 	qAuthors.append(qUserDetails.find('a').text)
 question['body'] = qCleanBody
 question['authors'] = qAuthors
-
 qUpvotes = soup.find('span', attrs={'itemprop':'upvoteCount'}).text
 question['upvotes'] = qUpvotes
-#print(question)
+
+qComments = []
+question['comments'] = qComments
+for words in soup.find_all('div', attrs={'class':'question'}):
+	qComment = {}
+	for stuff in words.find_all('span', attrs={'class':'comment-copy'}):
+		qComment['comment'] = stuff.text
+		qComments.append(qComment)
+	for names in words.find_all('div', attrs={'class':'comment-body'}):
+		qComment['author'] = names.find('a').text
+	for votes in words.find_all('div', attrs={'class':'js-comment-actions'}):
+		qComment['upvotes'] = votes.find('div', attrs={'class':'comment-score'}).text
+	qComments.append(qComment)
 
 answers = []
 data['answers'] = answers
