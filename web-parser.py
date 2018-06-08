@@ -37,23 +37,20 @@ for words in soup.find_all('div', attrs={'class':'question'}):
 
 answers = []
 data['answers'] = answers
-for stuff in soup.find_all(id='answers'):
-	answer = {}
-	aComments  = []
-	answer['comments'] = aComments
-	for words in soup.find_all('div', attrs={'class':'answercell'}):
-		answer['body'] = words.find('div', attrs={'class':'post-text'}).text
-		aUserDetails = words.find('div', attrs={'class':'user-details'})
-		aAuthors = []
-		aAuthors.append(aUserDetails.find('a').text)
-		answer['authors'] = aAuthors
+answer = {}
+aComments = []
+answer['comments'] = aComments
+for words in soup.find_all('div', attrs={'class':'answercell'}):
+	answer['body'] = words.find('div', attrs={'class':'post-text'}).text
+	aUserDetails = words.find('div', attrs={'class':'user-details'})
+	aAuthors = []
+	aAuthors.append(aUserDetails.find('a').text)
+	answer['authors'] = aAuthors
+	for comments in words.find_next_sibling().find_all('li', attrs={'class':'comment'}):
 		aComment = {}
-		comments = words.find_next_sibling()
-		for content in comments.find_all('span',attrs={'class':'comment-copy'}):
-			aComment['comment'] = content.text
-		for names in comments.find_all('div', attrs={'class':'comment-body'}):
-			aComment['author'] = names.find('a').text
-		for votes in comments.find_all('div', attrs={'class':'comment-actions'}):
-			aComment['upvotes'] = votes.find('div', attrs={'class':'comment-score'}).text
+		aComment['comment'] = comments.find('span',attrs={'class':'comment-copy'}).text
+		aComment['author'] = comments.find('a', attrs={'class':'comment-user'}).text
+		aComment['upvotes'] = comments.find('div', attrs={'class':'comment-score'}).text
 		aComments.append(aComment)
 	answers.append(answer)
+pprint.pprint(answers)
