@@ -1,30 +1,29 @@
 from bs4 import BeautifulSoup
 import urllib
-import numpy as np
 
-webpage = urllib.request.urlopen('https://stackoverflow.com/questions/3477741/why-does-c-require-a-cast-for-malloc-but-c-doesnt')
+webpage = urllib.request.urlopen('https://stackoverflow.com/questions/4592908/c-queue-simple-example')
 soup = BeautifulSoup(webpage, 'html.parser')
-question = []
-answers = []
-users = []
+
+data = {}
+question = {}
+data['question'] = question
 
 dirtyQTitle = soup.find('a', attrs={'class':'question-hyperlink'})
-cleanQTitle = dirtyQTitle.text.strip()
-question.append(cleanQTitle)
-#print(cleanQuestion)
+cleanQTitle = dirtyQTitle.text
+question['title'] = cleanQTitle
 
-dirtyQBody = soup.find('div', 'post-text')
-cleanQBody = dirtyQBody.text.strip()
-question.append(cleanQBody)
-#print(cleanQdesc)
+for words in soup.find_all('div', attrs={'class':'postcell'}):
+	cleanQBody = (words.find('div', attrs={'class':'post-text'}).text)
+	userDetails = (words.find('div', attrs={'class':'user-details'}))
+	asker = userDetails.find('a').text
+question['body'] = cleanQBody
+question['asker'] = asker
 
-dirtyUsers = soup.find_all('div', attrs={'class':'user-details'})
-for j in dirtyUsers:
-	users.append(j.text.strip())
-#print(users)
+upvotes = soup.find('span',attrs={'itemprop':'upvoteCount'}).text
+question['upvotes'] = upvotes
+print(question['body'])
 
-
-dirtyAnswers = soup.find_all('div', attrs={'class':'answer'})
-for words in dirtyAnswers:
-	answers.append(words.text.strip())
-#print(answers)
+answers = []
+for words in soup.find_all('div', attrs={'class':'answer'}):
+	for moreWords in words.find_all('p'):
+		answers.append(moreWords.text)
