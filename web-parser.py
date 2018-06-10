@@ -7,33 +7,28 @@ soup = BeautifulSoup(webpage, 'html.parser')
 
 data = {}
 question = {}
-data['question'] = question
+qComments = []
 
-dirtyTitle = soup.find('a', attrs={'class':'question-hyperlink'})
-cleanTitle = dirtyTitle.text
-question['title'] = cleanTitle
+title = soup.find('a', attrs={'class':'question-hyperlink'}).text
+question['title'] = title
 
 for words in soup.find_all('div', attrs={'class':'postcell'}):
-	qCleanBody = words.find('div', attrs={'class':'post-text'}).text
+	qBody = words.find('div', attrs={'class':'post-text'}).text
 	qUserDetails = words.find('div', attrs={'class':'user-details'})
 	qAuthors = []
 	qAuthors.append(qUserDetails.find('a').text)
-question['body'] = qCleanBody
+	for comments in words.find_next_sibling().find_all('li', attrs={'class':'comment'}):
+		qComment = {}
+		qComment['comment'] = comments.find('span',attrs={'class':'comment-copy'}).text
+		qComment['author'] = comments.find('a', attrs={'class':'comment-user'}).text
+		qComment['upvotes'] = comments.find('div', attrs={'class':'comment-score'}).text
+		qComments.append(qComment)
+
+question['body'] = qBody
 question['authors'] = qAuthors
 qUpvotes = soup.find('span', attrs={'itemprop':'upvoteCount'}).text
 question['upvotes'] = qUpvotes
-
-qComments = []
 question['comments'] = qComments
-for words in soup.find_all('div', attrs={'class':'question'}):
-	qComment = {}
-	for stuff in words.find_all('span', attrs={'class':'comment-copy'}):
-		qComment['comment'] = stuff.text
-	for names in words.find_all('div', attrs={'class':'comment-body'}):
-		qComment['author'] = names.find('a').text
-	for votes in words.find_all('div', attrs={'class':'js-comment-actions'}):
-		qComment['upvotes'] = votes.find('div', attrs={'class':'comment-score'}).text
-	qComments.append(qComment)
 
 answers = []
 data['answers'] = answers
@@ -53,4 +48,3 @@ for words in soup.find_all('div', attrs={'class':'answercell'}):
 		aComment['upvotes'] = comments.find('div', attrs={'class':'comment-score'}).text
 		aComments.append(aComment)
 	answers.append(answer)
-pprint.pprint(answers)
