@@ -3,4 +3,5 @@ import output
 
 url = input('input here: ')
 
-webparser.getURL(url)
+data_parsed = webparser.parseIt(url)
+output.writeJSON(data_parsed)

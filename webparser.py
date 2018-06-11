@@ -2,11 +2,11 @@ from bs4 import BeautifulSoup
 import urllib
 import json
 
-def getURL(url):
+def parseIt(url):
 	webpage = urllib.request.urlopen(url)
 	soup = BeautifulSoup(webpage, 'html.parser')
+	data = {}
 
-def getQuestion():
 	question = {}
 	data['question'] = question
 	qComments = []
@@ -32,7 +32,6 @@ def getQuestion():
 	question['upvotes'] = qUpvotes
 	question['comments'] = qComments
 
-def getAnswers():
 	answers = []
 	data['answers'] = answers
 	answer = {}
@@ -57,10 +56,5 @@ def getAnswers():
 		answer['comments'] = aComments
 		answers.append(answer)
 
-def getJSON():
-	json_object = json.dumps(data)
-	with open('data.json','w') as out:
-		json.dump(json_object, out)
-
-def addData():
-	
+	new_data = json.dumps(data)
+	return new_data
