@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib
 import pprint
+import json
 
 webpage = urllib.request.urlopen('https://stackoverflow.com/questions/4592908/c-queue-simple-example')
 soup = BeautifulSoup(webpage, 'html.parser')
@@ -55,4 +56,4 @@ for words in soup.find_all('div', attrs={'class':'answercell'}):
 	answer['comments'] = aComments
 	answers.append(answer)
 
-pprint.pprint(data)
+json.dumps(data)
